@@ -2,8 +2,13 @@ import random
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Literal
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 
 app = FastAPI(title="Coin Flip")
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 # Simple in-memory stats (resets when the server restarts)
 stats = {
@@ -57,3 +62,8 @@ def reset_stats():
     stats["total"] = 0
     stats["last_result"] = None
     return {"ok": True, "stats": stats}
+
+
+@app.get("/ui")
+def ui(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
