@@ -41,6 +41,8 @@
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
+      transform: rotateY(0deg);
+      will-change: transform;
     }
     
     .coin-face {
@@ -107,13 +109,17 @@
     
     .results-container {
       text-align: center;
-      min-height: 50px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
     #result {
       font-size: 1.5rem;
       font-weight: bold;
       transition: color 0.3s;
+      width: 100%;
     }
     
     #result.correct {
