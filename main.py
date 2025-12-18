@@ -22,13 +22,8 @@ class GuessRequest(BaseModel):
     guess: Literal["heads", "tails"]
 
 @app.get("/")
-def root():
-    return {
-        "message": "Coin Flip API is running",
-        "try_docs": "/docs",
-        "stats_endpoint": "/stats",
-        "flip_endpoint": "/flip",
-    }
+def root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/stats")
 def get_stats():
