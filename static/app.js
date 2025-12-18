@@ -22,21 +22,30 @@ async function flip(guess) {
 
     const data = await res.json();
     
-    // Set the coin to the correct final position BEFORE animation
+    // Calculate the final rotation based on result
+    // Use a large number of rotations (1800deg = 5 full spins) plus the final position
+    const currentRotation = coin.style.transform ? 
+      parseFloat(coin.style.transform.replace(/[^\d.-]/g, '')) : 0;
+    
+    let finalRotation;
     if (data.coin_result === 'heads') {
-      coin.style.transform = 'rotateY(0deg)';
+      // Land on heads (0deg or any multiple of 360)
+      finalRotation = currentRotation + 1800; // 5 full spins
+      // Make sure it ends at 0 or 360
+      finalRotation = Math.floor(finalRotation / 360) * 360;
     } else {
-      coin.style.transform = 'rotateY(180deg)';
+      // Land on tails (180deg)
+      finalRotation = currentRotation + 1800 + 180; // 5 full spins + 180
+      // Make sure it ends at 180
+      finalRotation = Math.floor((finalRotation - 180) / 360) * 360 + 180;
     }
     
-    // Start coin flip animation
-    coin.classList.add('flipping');
+    // Apply the rotation with animation
+    coin.style.transition = 'transform 1s ease-in-out';
+    coin.style.transform = `rotateY(${finalRotation}deg)`;
     
     // Wait for animation to complete
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Stop animation
-    coin.classList.remove('flipping');
     
     // Wait a bit before showing text result
     await new Promise(resolve => setTimeout(resolve, 300));
